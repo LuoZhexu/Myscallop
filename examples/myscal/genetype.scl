@@ -1,0 +1,46 @@
+rel genotype("Alice", "Aa")
+rel genotype("Bob", "aa")
+rel genotype("Diana", "Aa")
+
+rel parent_child(C, M, F) :- father(F, C), mother(M, C)
+// rel parent_child("Charlie", "Alice", "Bob")
+// rel parent_child("Eva", "Charlie", "Diana")
+rel mother("Alice", "Charlie")
+rel father("Bob", "Charlie")
+rel mother("Charlie", "Eva")
+rel father("Diana", "Eva")
+
+
+// Define the correspondence between parental genotype combinations and offspring genotype probabilities
+// mendel(P1_G, P2_G, Child_G, Prob)
+rel mendel("AA", "AA", "AA", 1.0)
+rel mendel("AA", "Aa", "AA", 0.5)
+rel mendel("AA", "Aa", "Aa", 0.5)
+rel mendel("Aa", "AA", "AA", 0.5)
+rel mendel("Aa", "AA", "Aa", 0.5)
+rel mendel("AA", "aa", "Aa", 1.0)
+rel mendel("aa", "AA", "Aa", 1.0)
+rel mendel("Aa", "Aa", "AA", 0.25)
+rel mendel("Aa", "Aa", "Aa", 0.5)
+rel mendel("Aa", "Aa", "aa", 0.25)
+rel mendel("Aa", "aa", "Aa", 0.5)
+rel mendel("Aa", "aa", "aa", 0.5)
+rel mendel("aa", "Aa", "Aa", 0.5)
+rel mendel("aa", "Aa", "aa", 0.5)
+rel mendel("aa", "aa", "aa", 1.0)
+
+rel P::genotype(C, G) :- mendel(G1, G2, G, P),
+  parent_child(C, P1, P2),
+  genotype(P1, G1),
+  genotype(P2, G2),
+  father(P2, C),
+  mother(P1, C)
+
+
+rel disease(X) :- genotype(X, "aa")
+
+// Query Example
+query genotype("Charlie", _)
+query genotype("Eva", _)
+query disease("Charlie")
+query disease("Eva")

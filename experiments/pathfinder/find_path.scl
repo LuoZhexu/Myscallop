@@ -1,0 +1,7 @@
+// Input from neural networks
+type dash (i8 , i8)
+type dot (i8)
+
+// Connectivity check
+rel path (x , y ) = dash (x , y ) or path (x , z ) and dash (z , y )
+rel connected () = dot ( x ) , dot ( y ) , path (x , y ) , x != y
